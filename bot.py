@@ -3,11 +3,15 @@ import os
 import sys
 
 from dotenv import load_dotenv
+from google.cloud import dialogflow
 from telegram import Update
 from telegram.ext import (CallbackContext, CommandHandler, Filters,
                           MessageHandler, Updater)
 
 load_dotenv()
+
+dialogflow_client = dialogflow.SessionsClient()
+project_id = os.getenv("DIALOGFLOW_PROJECT_ID")
 
 token = os.getenv("TELEGRAM_BOT_TOKEN")
 
@@ -25,9 +29,30 @@ def start(update: Update, context: CallbackContext) -> None:
     activity_logger.info('Start command received')
 
 
+def detect_intent_text(project_id, session_id, text, language_code):
+    session = dialogflow_client.session_path(project_id, session_id)
+    
+    text_input = dialogflow.TextInput(text=text, language_code=language_code)
+    query_input = dialogflow.QueryInput(text=text_input)
+    response = dialogflow_client.detect_intent(
+        request={"session": session, "query_input": query_input}
+    )
+    
+    return response.query_result.fulfillment_text
+
+
 def echo(update: Update, context: CallbackContext) -> None:
-    update.message.reply_text(update.message.text)
-    activity_logger.info(f'Message echoed: {update.message.text}')
+    user_id = update.effective_user.id
+    text = update.message.text
+
+    response_text = detect_intent_text(
+        project_id=project_id,
+        session_id=str(user_id),
+        text=text,
+        language_code='ru',
+    )
+    update.message.reply_text(response_text)
+    activity_logger.info(f'DialogFlow response: {response_text}')
 
 
 def error_handler(update: Update, context: CallbackContext) -> None:
