@@ -31,13 +31,13 @@ def start(update: Update, context: CallbackContext) -> None:
 
 def detect_intent_text(project_id, session_id, text, language_code):
     session = dialogflow_client.session_path(project_id, session_id)
-    
+
     text_input = dialogflow.TextInput(text=text, language_code=language_code)
     query_input = dialogflow.QueryInput(text=text_input)
     response = dialogflow_client.detect_intent(
         request={"session": session, "query_input": query_input}
     )
-    
+
     return response.query_result.fulfillment_text
 
 
