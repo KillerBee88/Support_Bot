@@ -5,6 +5,9 @@ import random
 import vk_api as vk
 from google.cloud import dialogflow, storage
 from vk_api.longpoll import VkEventType, VkLongPoll
+from dotenv import load_dotenv
+
+load_dotenv()
 
 credentials_path = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
 client = storage.Client.from_service_account_json(credentials_path)
