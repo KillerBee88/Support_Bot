@@ -29,7 +29,6 @@ def detect_intent_texts(project_id, session_id, text, language_code):
 
 
 def echo(event, vk_api):
-    project_id = os.getenv("DIALOGFLOW_PROJECT_ID")
     session_id = event.user_id
     text = event.text
     language_code = 'ru'
