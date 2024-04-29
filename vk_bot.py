@@ -2,15 +2,35 @@ import os
 import random
 
 import vk_api as vk
+from google.cloud import dialogflow
 from vk_api.longpoll import VkEventType, VkLongPoll
 
 vk_token = os.getenv("VK_BOT_TOKEN")
+project_id = os.getenv("DIALOGFLOW_PROJECT_ID")
+
+
+def detect_intent_texts(project_id, session_id, text, language_code):
+    session_client = dialogflow.SessionsClient()
+    session = session_client.session_path(project_id, session_id)
+
+    text_input = dialogflow.TextInput(text=text, language_code=language_code)
+    query_input = dialogflow.QueryInput(text=text_input)
+
+    response = session_client.detect_intent(
+        session=session, query_input=query_input)
+    return response.query_result.fulfillment_text
 
 
 def echo(event, vk_api):
+    fulfillment_text = detect_intent_texts(
+        project_id,
+        event.user_id,
+        event.text,
+        'ru',
+    )
     vk_api.messages.send(
         user_id=event.user_id,
-        message=event.text,
+        message=fulfillment_text,
         random_id=random.randint(1, 1000)
     )
 
