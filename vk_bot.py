@@ -3,9 +3,9 @@ import os
 import random
 
 import vk_api as vk
+from dotenv import load_dotenv
 from google.cloud import dialogflow, storage
 from vk_api.longpoll import VkEventType, VkLongPoll
-from dotenv import load_dotenv
 
 load_dotenv()
 
@@ -48,7 +48,9 @@ def echo(event, vk_api):
             message=fulfillment_text,
             random_id=random.randint(1, 1000)
         )
-        logger.info(f"Sent message to user {event.user_id}: {fulfillment_text}")
+        logger.info(
+            f"Sent message to user {event.user_id}: {fulfillment_text}")
+
 
 if __name__ == "__main__":
     vk_session = vk.VkApi(token=vk_token)
