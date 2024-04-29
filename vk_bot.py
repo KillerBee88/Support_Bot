@@ -1,3 +1,4 @@
+import logging
 import os
 import random
 
@@ -9,6 +10,10 @@ credentials_path = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
 client = storage.Client.from_service_account_json(credentials_path)
 vk_token = os.getenv("VK_BOT_TOKEN")
 project_id = os.getenv("DIALOGFLOW_PROJECT_ID")
+
+logging.basicConfig(level=logging.INFO,
+                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
 
 def detect_intent_texts(project_id, session_id, text, language_code):
@@ -41,7 +46,7 @@ def echo(event, vk_api):
             message=fulfillment_text,
             random_id=random.randint(1, 1000)
         )
-
+        logger.info(f"Sent message to user {event.user_id}: {fulfillment_text}")
 
 if __name__ == "__main__":
     vk_session = vk.VkApi(token=vk_token)
@@ -53,4 +58,4 @@ if __name__ == "__main__":
             if event.type == VkEventType.MESSAGE_NEW and event.to_me:
                 echo(event, vk_api)
     except Exception as e:
-        pass
+        logger.error(f"An error occurred: {str(e)}")
