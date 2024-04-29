@@ -31,6 +31,9 @@ def echo(event, vk_api):
     text = event.text
     language_code = 'ru'
 
+    if text.lower() == 'error':
+        raise Exception("Тестовая ошибка")
+
     response = detect_intent_texts(project_id, session_id, text, language_code)
 
     if not response.query_result.intent.is_fallback:
@@ -57,7 +60,7 @@ if __name__ == "__main__":
     vk_session = vk.VkApi(token=vk_token)
     vk_api = vk_session.get_api()
     longpoll = VkLongPoll(vk_session)
-    
+
     try:
         for event in longpoll.listen():
             if event.type == VkEventType.MESSAGE_NEW and event.to_me:
