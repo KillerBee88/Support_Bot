@@ -4,6 +4,7 @@ import random
 
 import vk_api as vk
 from dotenv import load_dotenv
+from telegram import Bot
 from google.cloud import dialogflow, storage
 from vk_api.longpoll import VkEventType, VkLongPoll
 
@@ -13,6 +14,8 @@ credentials_path = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
 client = storage.Client.from_service_account_json(credentials_path)
 vk_token = os.getenv("VK_BOT_TOKEN")
 project_id = os.getenv("DIALOGFLOW_PROJECT_ID")
+telegram_bot_token = os.getenv("TELEGRAM_BOT_TOKEN")
+telegram_chat_id = os.getenv("DEVELOPER_CHAT_ID")
 
 logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -50,6 +53,11 @@ def echo(event, vk_api):
         )
         logger.info(
             f"Sent message to user {event.user_id}: {fulfillment_text}")
+        
+
+def send_telegram_message(text):
+    bot = Bot(token=telegram_bot_token)
+    bot.send_message(chat_id=telegram_chat_id, text=text)
 
 
 if __name__ == "__main__":
@@ -62,4 +70,6 @@ if __name__ == "__main__":
             if event.type == VkEventType.MESSAGE_NEW and event.to_me:
                 echo(event, vk_api)
     except Exception as e:
-        logger.error(f"An error occurred: {str(e)}")
+        error_message = f"Возникла ошибка: {str(e)}"
+        logger.error(error_message)
+        send_telegram_message(error_message)
