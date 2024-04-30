@@ -58,7 +58,7 @@ python3 tg_bot.py
 python3 add_dialogflow_intent.py путь/к/файлу.json
 ````
 ## Пример работы ботов
-[tg_bot.py:](@BotTranscriBot)
+[tg_bot.py:](https://t.me/BotTranscriBot)
 
 ![tgbot](https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExeWN4Zjl2bG1mZnJjMWN2ajRtdnFhNDZ0cGY2aDNsZDUyZW5oMTFlNiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/zWQIwDRfc9RqSIeeTV/giphy.gif)
 
