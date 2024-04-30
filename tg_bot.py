@@ -58,6 +58,13 @@ def echo(update: Update, context: CallbackContext) -> None:
 def error_handler(update: Update, context: CallbackContext) -> None:
     error_logger.error(
         msg="Exception while handling an update:", exc_info=context.error)
+    
+    developer_chat_id = os.getenv("DEVELOPER_CHAT_ID")
+    
+    try:
+        context.bot.send_message(chat_id=developer_chat_id, text=str(context.error))
+    except Exception as e:
+        error_logger.error(f"Ошибка при отправке сообщения об ошибке: {e}")
 
 
 def main() -> None:
