@@ -25,7 +25,7 @@ activity_logger = logging.getLogger('activity_logger')
 
 
 def start(update: Update, context: CallbackContext) -> None:
-    update.message.reply_text('Привет! Я эхобот.')
+    update.message.reply_text('Напиши привет или задай свой вопрос')
     activity_logger.info('Start command received')
 
 
