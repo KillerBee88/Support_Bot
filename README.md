@@ -59,6 +59,9 @@ python3 add_dialogflow_intent.py путь/к/файлу.json
 ````
 ## Пример работы ботов
 tg_bot.py:
+
 ![tgbot](https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExeWN4Zjl2bG1mZnJjMWN2ajRtdnFhNDZ0cGY2aDNsZDUyZW5oMTFlNiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/zWQIwDRfc9RqSIeeTV/giphy.gif)
+
 vk_bot.py:
+
 ![vkbot](https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExZTEybTRrMTdwZDA0c201cmk1a2Y3NmhsYTI4MnFpb2VteW5oejFuayZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/iDGK6hB4c5LfGDN2oW/giphy.gif)
