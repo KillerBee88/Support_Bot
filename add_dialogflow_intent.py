@@ -1,3 +1,4 @@
+import argparse
 import json
 import os
 
@@ -26,13 +27,20 @@ def create_intent(project_id, display_name, training_phrases_parts, message_text
         messages=[message]
     )
 
-    response = intents_client.create_intent(request={"parent": parent, "intent": intent})
+    response = intents_client.create_intent(
+        request={"parent": parent, "intent": intent})
 
     return response
 
 
 if __name__ == '__main__':
-    with open('questions.json') as file:
+
+    parser = argparse.ArgumentParser(description='Укажите путь к файлу .json')
+    parser.add_argument('data_file_path', type=str,
+                        help='Path to the data file')
+    args = parser.parse_args()
+
+    with open(args.data_file_path) as file:
         data = json.load(file)
 
     for intent_name, intent_data in data.items():
