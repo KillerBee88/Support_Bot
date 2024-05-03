@@ -4,8 +4,6 @@ import os
 
 from google.cloud import dialogflow_v2 as dialogflow
 
-project_id = os.getenv('DIALOGFLOW_PROJECT_ID')
-
 
 def create_intent(project_id, display_name, training_phrases_parts, message_text):
     intents_client = dialogflow.IntentsClient()
@@ -34,6 +32,7 @@ def create_intent(project_id, display_name, training_phrases_parts, message_text
 
 
 if __name__ == '__main__':
+    project_id = os.getenv('DIALOGFLOW_PROJECT_ID')
 
     parser = argparse.ArgumentParser(description='Укажите путь к файлу .json')
     parser.add_argument('data_file_path', type=str,
