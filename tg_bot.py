@@ -8,7 +8,8 @@ from telegram import Update
 from telegram.ext import (CallbackContext, CommandHandler, Filters,
                           MessageHandler, Updater)
 
-dialogflow_client = dialogflow.SessionsClient()
+from dialogflow_helpers import detect_tg_intent_texts
+
 project_id = os.getenv("DIALOGFLOW_PROJECT_ID")
 developer_chat_id = os.getenv("DEVELOPER_CHAT_ID")
 token = os.getenv("TELEGRAM_BOT_TOKEN")
@@ -19,23 +20,11 @@ def start(update: Update, context: CallbackContext) -> None:
     context.bot_data['logger'].info('Start command received')
 
 
-def detect_intent_text(project_id, session_id, text, language_code):
-    session = dialogflow_client.session_path(project_id, session_id)
-
-    text_input = dialogflow.TextInput(text=text, language_code=language_code)
-    query_input = dialogflow.QueryInput(text=text_input)
-    response = dialogflow_client.detect_intent(
-        request={"session": session, "query_input": query_input}
-    )
-
-    return response.query_result.fulfillment_text
-
-
 def handle_message(update: Update, context: CallbackContext) -> None:
     user_id = update.effective_user.id
     text = update.message.text
 
-    response_text = detect_intent_text(
+    response_text = detect_tg_intent_texts(
         project_id=project_id,
         session_id=str(user_id),
         text=text,
