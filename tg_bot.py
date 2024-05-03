@@ -3,12 +3,18 @@ import os
 import sys
 
 from dotenv import load_dotenv
+from google.cloud import dialogflow
 from telegram import Update
 from telegram.ext import (CallbackContext, CommandHandler, Filters,
                           MessageHandler, Updater)
 
-from dialogflow_helpers import detect_tg_intent_texts
+from dialogflow_helpers import detect_intent_texts
 
+logging.basicConfig(stream=sys.stdout, level=logging.INFO,
+                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger('activity_logger')
+
+dialogflow_client = dialogflow.SessionsClient()
 project_id = os.getenv("DIALOGFLOW_PROJECT_ID")
 developer_chat_id = os.getenv("DEVELOPER_CHAT_ID")
 
@@ -22,14 +28,16 @@ def handle_message(update: Update, context: CallbackContext) -> None:
     user_id = update.effective_user.id
     text = update.message.text
 
-    response_text = detect_tg_intent_texts(
+    response_text = detect_intent_texts(
         project_id=project_id,
         session_id=str(user_id),
         text=text,
         language_code='ru',
+        client=dialogflow_client
     )
-    update.message.reply_text(response_text)
-    context.bot_data['logger'].info(f'DialogFlow response: {response_text}')
+    update.message.reply_text(response_text.query_result.fulfillment_text)
+    context.bot_data['logger'].info(
+        f'DialogFlow response: {response_text.query_result.fulfillment_text}')
 
 
 def error_handler(update: Update, context: CallbackContext) -> None:
@@ -48,10 +56,6 @@ def main() -> None:
     load_dotenv()
 
     token = os.getenv("TELEGRAM_BOT_TOKEN")
-
-    logging.basicConfig(stream=sys.stdout, level=logging.INFO,
-                        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    logger = logging.getLogger('activity_logger')
 
     error_logger = logging.getLogger('error_logger')
     error_logger.setLevel(logging.ERROR)
