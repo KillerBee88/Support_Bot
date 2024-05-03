@@ -1,29 +1,17 @@
 import os
+
 from google.cloud import dialogflow
 
-project_id = os.getenv("DIALOGFLOW_PROJECT_ID")
 dialogflow_client = dialogflow.SessionsClient()
 
 
-def detect_vk_intent_texts(project_id, session_id, text, language_code):
-    session_client = dialogflow.SessionsClient()
-    session = session_client.session_path(project_id, session_id)
+def detect_intent_texts(project_id, session_id, text, language_code, client):
+    session = client.session_path(project_id, session_id)
 
     text_input = dialogflow.TextInput(text=text, language_code=language_code)
     query_input = dialogflow.QueryInput(text=text_input)
-
-    response = session_client.detect_intent(
-        session=session, query_input=query_input)
-    return response
-
-
-def detect_tg_intent_texts(project_id, session_id, text, language_code):
-    session = dialogflow_client.session_path(project_id, session_id)
-
-    text_input = dialogflow.TextInput(text=text, language_code=language_code)
-    query_input = dialogflow.QueryInput(text=text_input)
-    response = dialogflow_client.detect_intent(
+    response = client.detect_intent(
         request={"session": session, "query_input": query_input}
     )
 
-    return response.query_result.fulfillment_text
+    return response
