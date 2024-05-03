@@ -4,9 +4,11 @@ import random
 
 import vk_api as vk
 from dotenv import load_dotenv
-from google.cloud import dialogflow, storage
+from google.cloud import storage
 from telegram import Bot
 from vk_api.longpoll import VkEventType, VkLongPoll
+
+from dialogflow_helpers import detect_vk_intent_texts
 
 credentials_path = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
 client = storage.Client.from_service_account_json(credentials_path)
@@ -16,24 +18,12 @@ telegram_bot_token = os.getenv("TELEGRAM_BOT_TOKEN")
 telegram_chat_id = os.getenv("DEVELOPER_CHAT_ID")
 
 
-def detect_intent_texts(project_id, session_id, text, language_code):
-    session_client = dialogflow.SessionsClient()
-    session = session_client.session_path(project_id, session_id)
-
-    text_input = dialogflow.TextInput(text=text, language_code=language_code)
-    query_input = dialogflow.QueryInput(text=text_input)
-
-    response = session_client.detect_intent(
-        session=session, query_input=query_input)
-    return response
-
-
 def process_event(event, vk_api, logger):
     session_id = event.user_id
     text = event.text
     language_code = 'ru'
 
-    response = detect_intent_texts(project_id, session_id, text, language_code)
+    response = detect_vk_intent_texts(project_id, session_id, text, language_code)
 
     if not response.query_result.intent.is_fallback:
         fulfillment_text = response.query_result.fulfillment_text
