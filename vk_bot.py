@@ -22,7 +22,8 @@ def process_event(event, vk_api, logger):
     text = event.text
     language_code = 'ru'
 
-    response = detect_vk_intent_texts(project_id, session_id, text, language_code)
+    response = detect_vk_intent_texts(
+        project_id, session_id, text, language_code)
 
     if not response.query_result.intent.is_fallback:
         fulfillment_text = response.query_result.fulfillment_text
@@ -33,11 +34,6 @@ def process_event(event, vk_api, logger):
         )
         logger.info(
             f"Sent message to user {event.user_id}: {fulfillment_text}")
-
-
-def send_telegram_message(text):
-    bot = Bot(token=telegram_bot_token)
-    bot.send_message(chat_id=telegram_chat_id, text=text)
 
 
 def main():
@@ -59,8 +55,8 @@ def main():
     except Exception as e:
         error_message = f"Возникла ошибка: {str(e)}"
         logger.error(error_message)
-        send_telegram_message(
-            error_message, telegram_bot_token, telegram_chat_id)
+        bot = Bot(token=telegram_bot_token)
+        bot.send_message(chat_id=telegram_chat_id, text=error_message)
 
 
 if __name__ == "__main__":
