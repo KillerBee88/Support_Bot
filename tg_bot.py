@@ -3,7 +3,6 @@ import os
 import sys
 
 from dotenv import load_dotenv
-from google.cloud import dialogflow
 from telegram import Update
 from telegram.ext import (CallbackContext, CommandHandler, Filters,
                           MessageHandler, Updater)
@@ -12,7 +11,6 @@ from dialogflow_helpers import detect_tg_intent_texts
 
 project_id = os.getenv("DIALOGFLOW_PROJECT_ID")
 developer_chat_id = os.getenv("DEVELOPER_CHAT_ID")
-token = os.getenv("TELEGRAM_BOT_TOKEN")
 
 
 def start(update: Update, context: CallbackContext) -> None:
@@ -48,6 +46,8 @@ def error_handler(update: Update, context: CallbackContext) -> None:
 
 def main() -> None:
     load_dotenv()
+
+    token = os.getenv("TELEGRAM_BOT_TOKEN")
 
     logging.basicConfig(stream=sys.stdout, level=logging.INFO,
                         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
