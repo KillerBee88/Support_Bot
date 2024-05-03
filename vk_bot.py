@@ -12,7 +12,6 @@ from dialogflow_helpers import detect_vk_intent_texts
 
 credentials_path = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
 client = storage.Client.from_service_account_json(credentials_path)
-vk_token = os.getenv("VK_BOT_TOKEN")
 project_id = os.getenv("DIALOGFLOW_PROJECT_ID")
 telegram_bot_token = os.getenv("TELEGRAM_BOT_TOKEN")
 telegram_chat_id = os.getenv("DEVELOPER_CHAT_ID")
@@ -43,6 +42,7 @@ def send_telegram_message(text):
 
 def main():
     load_dotenv()
+    vk_token = os.getenv("VK_BOT_TOKEN")
 
     logging.basicConfig(level=logging.INFO,
                         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
