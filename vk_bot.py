@@ -10,9 +10,6 @@ from vk_api.longpoll import VkEventType, VkLongPoll
 
 from dialogflow_helpers import detect_intent_texts
 
-logging.basicConfig(level=logging.INFO,
-                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-logger = logging.getLogger(__name__)
 project_id = os.getenv("DIALOGFLOW_PROJECT_ID")
 
 
@@ -41,6 +38,10 @@ def main():
     telegram_bot_token = os.getenv("TELEGRAM_BOT_TOKEN")
     telegram_chat_id = os.getenv("DEVELOPER_CHAT_ID")
     credentials_path = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
+
+    logging.basicConfig(
+        level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    logger = logging.getLogger(__name__)
 
     vk_session = vk.VkApi(token=vk_token)
     vk_api = vk_session.get_api()
