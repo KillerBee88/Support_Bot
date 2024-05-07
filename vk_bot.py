@@ -10,10 +10,8 @@ from vk_api.longpoll import VkEventType, VkLongPoll
 
 from dialogflow_helpers import detect_intent_texts
 
-project_id = os.getenv("DIALOGFLOW_PROJECT_ID")
 
-
-def process_event(event, vk_api, dialogflow_client, logger):
+def process_event(event, vk_api, dialogflow_client, logger, project_id):
     session_id = str(event.user_id)
     text = event.text
     language_code = 'ru'
@@ -34,6 +32,7 @@ def process_event(event, vk_api, dialogflow_client, logger):
 
 def main():
     load_dotenv()
+    project_id = os.getenv("DIALOGFLOW_PROJECT_ID")
     vk_token = os.getenv("VK_BOT_TOKEN")
     telegram_bot_token = os.getenv("TELEGRAM_BOT_TOKEN")
     telegram_chat_id = os.getenv("DEVELOPER_CHAT_ID")
@@ -53,7 +52,8 @@ def main():
     try:
         for event in longpoll.listen():
             if event.type == VkEventType.MESSAGE_NEW and event.to_me:
-                process_event(event, vk_api, dialogflow_client, logger)
+                process_event(event, vk_api, dialogflow_client,
+                              logger, project_id)
     except Exception as e:
         error_message = f"Возникла ошибка: {str(e)}"
         logger.error(error_message)
