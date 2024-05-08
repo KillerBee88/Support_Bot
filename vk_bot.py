@@ -10,6 +10,8 @@ from vk_api.longpoll import VkEventType, VkLongPoll
 
 from dialogflow_helpers import detect_intent_texts
 
+logger = logging.getLogger(__name__)
+
 
 def process_event(event, vk_api, dialogflow_client, logger, project_id):
     session_id = str(event.user_id)
@@ -40,7 +42,6 @@ def main():
 
     logging.basicConfig(
         level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    logger = logging.getLogger(__name__)
 
     vk_session = vk.VkApi(token=vk_token)
     vk_api = vk_session.get_api()
