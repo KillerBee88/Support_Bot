@@ -10,6 +10,11 @@ from telegram.ext import (CallbackContext, CommandHandler, Filters,
 
 from dialogflow_helpers import detect_intent_texts
 
+error_logger = logging.getLogger('error_logger')
+error_logger.setLevel(logging.ERROR)
+activity_logger = logging.getLogger('activity_logger')
+activity_logger.setLevel(logging.INFO)
+
 
 def start(update: Update, context: CallbackContext) -> None:
     update.message.reply_text('Напиши привет или задай свой вопрос')
@@ -55,11 +60,6 @@ def main() -> None:
     developer_chat_id = os.getenv("DEVELOPER_CHAT_ID")
 
     dialogflow_client = dialogflow.SessionsClient()
-
-    error_logger = logging.getLogger('error_logger')
-    error_logger.setLevel(logging.ERROR)
-    activity_logger = logging.getLogger('activity_logger')
-    activity_logger.setLevel(logging.INFO)
 
     updater = Updater(token, use_context=True)
     dispatcher = updater.dispatcher
