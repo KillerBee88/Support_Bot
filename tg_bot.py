@@ -5,21 +5,16 @@ import sys
 from dotenv import load_dotenv
 from google.cloud import dialogflow
 from telegram import Update
-from telegram.ext import (CallbackContext, CommandHandler, Filters,
-                          MessageHandler, Updater)
+from telegram.ext import CallbackContext, CommandHandler, Filters, MessageHandler, Updater
 
 from dialogflow_helpers import detect_intent_texts
 
 error_logger = logging.getLogger('error_logger')
-error_logger.setLevel(logging.ERROR)
 activity_logger = logging.getLogger('activity_logger')
-activity_logger.setLevel(logging.INFO)
-
 
 def start(update: Update, context: CallbackContext) -> None:
     update.message.reply_text('Напиши привет или задай свой вопрос')
     context.bot_data['logger'].info('Start command received')
-
 
 def handle_message(update: Update, context: CallbackContext) -> None:
     user_id = update.effective_user.id
@@ -36,7 +31,6 @@ def handle_message(update: Update, context: CallbackContext) -> None:
     context.bot_data['logger'].info(
         f'DialogFlow response: {response_text.query_result.fulfillment_text}')
 
-
 def error_handler(update: Update, context: CallbackContext) -> None:
     context.bot_data['error_logger'].error(
         "Exception while handling an update:", exc_info=context.error)
@@ -48,12 +42,13 @@ def error_handler(update: Update, context: CallbackContext) -> None:
         context.bot_data['error_logger'].error(
             f"Ошибка при отправке сообщения об ошибке: {e}")
 
-
 def main() -> None:
     load_dotenv()
 
     logging.basicConfig(stream=sys.stdout, level=logging.INFO,
                         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    error_logger.setLevel(logging.ERROR)
+    activity_logger.setLevel(logging.INFO)
 
     token = os.getenv("TELEGRAM_BOT_TOKEN")
     project_id = os.getenv("DIALOGFLOW_PROJECT_ID")
@@ -77,7 +72,6 @@ def main() -> None:
 
     updater.start_polling()
     updater.idle()
-
 
 if __name__ == '__main__':
     main()
